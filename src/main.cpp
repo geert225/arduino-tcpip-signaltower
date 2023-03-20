@@ -22,6 +22,8 @@
 #define MODULES 2
 #define LEDS MODULES * 8
 
+
+
 //Ethernet variable
 byte mac[] = { 0x65, 0x6C, 0x72, 0xDF, 0x0C, 0x6B };
 IPAddress Local(10,0,100,20);
@@ -31,6 +33,7 @@ EthernetServer server(3050);
 Adafruit_NeoPixel leds = Adafruit_NeoPixel(LEDS, 2, NEO_GRB + NEO_KHZ800);
 bool flashState = false;
 byte lightState = 0;
+
 
 //internal functions
 void(* resetArduino) (void) = 0x00;
@@ -85,6 +88,8 @@ void taskUpdateLamp(){
 
 
 
+
+
 void setup() {
   #ifdef GVG_DEBUG
     Serial.begin(9600);
@@ -99,6 +104,8 @@ void setup() {
   Ethernet.init(10);
   Ethernet.begin(mac, Local);
   debug(Ethernet.localIP());
+  pinMode(13, OUTPUT);
+  digitalWrite(13, LOW);
   //init leds
   leds.begin();
   leds.setBrightness(255);
@@ -115,6 +122,7 @@ void loop() {
   if (client) {
     debug("Client connected!");
     timedtask_enable_task(&LampControlTask);
+    digitalWrite(13, HIGH);
     while (client.connected())
     {
       if(client.available()){
@@ -126,6 +134,7 @@ void loop() {
       }
       timedtask_check_task(&LampControlTask);
     }
+    digitalWrite(13, LOW);
     timedtask_disable_task(&LampControlTask);
   }
 }

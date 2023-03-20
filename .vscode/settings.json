@@ -2,6 +2,6 @@
     "files.associations": {
         "*.ejs": "html",
         "*.ishtm": "html",
-        "timedtask.c": "cpp"
+        "timedtask.c": "c"
     }
 }

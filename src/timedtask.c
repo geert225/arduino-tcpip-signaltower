@@ -1,16 +1,18 @@
 #include <stdbool.h>
 
-typedef void (*timedtaskFuncPointer)(void);
+typedef void (*FuncPointer)(void);
 
 typedef struct 
 {
     unsigned long int beginTime;
     unsigned long int Interval;
     bool enabled;
-    timedtaskFuncPointer func;
+    FuncPointer func;
 } timedtask;
 
-timedtask timedtask_create_task(unsigned long int interval, timedtaskFuncPointer finishTask){
+
+
+timedtask timedtask_create_task(unsigned long int interval, FuncPointer finishTask){
     timedtask task;
     task.beginTime = millis();
     if(interval < 100)
