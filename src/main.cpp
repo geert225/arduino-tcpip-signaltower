@@ -16,8 +16,11 @@
 #define STATE_PURPLE 7
 #define STATE_ORANGE 8
 #define STATE_CLEAR 9
+#define STATE_WHITE 10
+#define STATE_FLASHWHITE 11
+#define STATE_DISCO 12
 
-#define MAXDATA 10
+#define MAXDATA 13
 
 #define MODULES 2
 #define LEDS MODULES * 8
@@ -32,6 +35,7 @@ EthernetServer server(3050);
 //led variavle
 Adafruit_NeoPixel leds = Adafruit_NeoPixel(LEDS, 2, NEO_GRB + NEO_KHZ800);
 bool flashState = false;
+byte discoState = 0;
 byte lightState = 0;
 
 
@@ -44,6 +48,10 @@ timedtask LampControlTask;
 void taskUpdateLamp(){
   flashState = !flashState;
   uint32_t colorcode = 0;
+  discoState++;
+  if(discoState >= 6){
+    discoState = 0;
+  }
   switch (lightState)
   {
   case STATE_ERROR:
@@ -73,6 +81,37 @@ void taskUpdateLamp(){
     break;
   case STATE_ORANGE:
       colorcode = leds.Color(255,100,0);
+    break;
+  case STATE_WHITE:
+      colorcode = leds.Color(255,255,255);
+    break;
+  case STATE_FLASHWHITE:
+      if (flashState)
+      {
+        colorcode = leds.Color(255,255,255);
+      }
+    break;
+  case STATE_DISCO:
+      switch (discoState){
+        case 0:
+          colorcode = leds.Color(255,0,0);
+          break;
+        case 1:
+          colorcode = leds.Color(255,255,0);
+          break;
+        case 2:
+          colorcode = leds.Color(0,255,0);
+          break;
+        case 3:
+          colorcode = leds.Color(0,255,255);
+          break;
+        case 4:
+          colorcode = leds.Color(0,0,255);
+          break;
+        case 5:
+          colorcode = leds.Color(255,0,255);
+          break;
+      }
     break;
   default:
       colorcode = leds.Color(0,0,0);
